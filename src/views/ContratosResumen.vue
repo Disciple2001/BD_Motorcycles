@@ -10,7 +10,7 @@ import ContratosResumenTabla from "@/components/reportes/ContratosResumenTabla.v
   <AdminLayout>
     <div class="p-4 h-full">
       <div class="h-full">
-        <strong>Contratos</strong>
+        <strong>Contratosii</strong>
         <ContratosResumenTabla/>
       </div>
     </div>

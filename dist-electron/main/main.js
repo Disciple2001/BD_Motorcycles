@@ -707,7 +707,7 @@ async function getContratosDeCliente(event, id_usuario) {
     console.log("Entro aqqui");
     const contratos = await conn`
         SELECT *, TO_CHAR(c.fecha_ini, 'DD-MM-YYYY') as "fecha_ini", TO_CHAR(c.fecha_fin, 'DD-MM-YYYY') as "fecha_fin"
-        FROM public."Contrato" as c
+        FROM public."Contrato" as c JOIN public."FormaPago" as s ON c."id_formaPago" = s."id_formaPago"
         WHERE c.id_usuario = ${id_usuario}
         `;
     return contratos;

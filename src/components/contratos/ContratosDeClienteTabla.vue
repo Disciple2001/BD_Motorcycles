@@ -91,8 +91,7 @@ const fetchContratos = () => {
           <th class="">Fecha final</th>
           <th class="">Seguro</th>
           <th class="">Precio</th>
-          <th class="">Id_formaPago</th>
-          <th class="">Id_Cliente</th>
+          <th class="">Forma de Pago</th>
           <th class="">Id_Moto</th>
           <th class="">Dias de Prorroga</th>
         </tr>
@@ -113,7 +112,7 @@ const fetchContratos = () => {
             {{ item.precio }}
           </td>
           <td>
-            {{ item.id_formaPago }}
+            {{ item.nom_formaPago }}
           </td>
           <td>
             {{ item.id_usuario }}
