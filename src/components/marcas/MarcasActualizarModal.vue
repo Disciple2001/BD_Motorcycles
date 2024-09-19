@@ -4,6 +4,10 @@ import Swal from 'sweetalert2'
 
 const isUpdateModalOpen = ref(false)
 
+const emit = defineEmits([
+  'updateMarca'
+])
+
 const marca = ref({
   nom_marca: "",
 })
@@ -41,6 +45,7 @@ const handleSubmit = () => {
   pro.then((value) => {
     isUpdateModalOpen.value = false
     cleanModal()
+    emit('updateMarca')
     Swal.fire({
       position: "center",
       icon: "success",
@@ -65,15 +70,13 @@ const cleanModal = () => {
     <div class="modal-box">
       <h3 class="font-bold text-lg">Actualizar una marca</h3>
       <form @submit.prevent="handleSubmit()">
-        {{ marca }}
-        {{ prop.id }}
         <div class="mb-5 flex flex-col w-full">
           <label form="nom_marca" class="label-text my-2">Nombre de marca</label>
           <input id="nom_marca" class="input input-bordered w-full" type="text" v-model="marca.nom_marca" required>
         </div>
         <div class="flex justify-end gap-2">
           <button type="submit" class="btn">Actualizar marca</button>
-          <button type="button" class="btn" @click="()=> isUpdateModalOpen = false">Close!</button>
+          <button type="button" class="btn" @click="()=> isUpdateModalOpen = false">Cerrar</button>
         </div>
       </form>
     </div>

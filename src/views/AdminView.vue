@@ -11,7 +11,6 @@ const sesionStore = useSesionStore()
 
 <template>
   <AdminLayout>
-      <h1>Admin</h1>
-      {{ sesionStore.isLoged }}
+      <h1 class="text-black text-xl">Administrador {{ sesionStore.logedUser.nom_usuario }}</h1>
   </AdminLayout>
 </template>

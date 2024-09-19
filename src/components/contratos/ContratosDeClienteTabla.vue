@@ -1,6 +1,6 @@
 <script setup lang="js">
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch } from "vue";
 import Swal from "sweetalert2";
 import swalWithBootstrapButtons from "sweetalert2";
 import MarcasActualizarModal from "@/components/marcas/MarcasActualizarModal.vue";
@@ -17,18 +17,20 @@ const sesionStore = useSesionStore()
 
 const data = ref([])
 
+const props = defineProps(['modalCompleted'])
+
 
 onMounted(() => {
-  try {
-    const promesa = window.electronAPI.get_contratosDeCliente(sesionStore.logedUser.id_usuario)
-    promesa.then((value) => {
-      console.log(value);
-      data.value = value
-    })
-  } catch (err) {
-    console.log(err)
-  }
+  fetchContratos()
 })
+
+
+watch(() => props.modalCompleted, (newVal, oldValue) => {
+  if (newVal || oldValue) {
+    fetchContratos();
+  }
+});
+
 
 const handleDelete = (id) =>{
   try{
@@ -66,6 +68,17 @@ const handleDelete = (id) =>{
   }
 }
 
+const fetchContratos = () => {
+  try {
+    const promesa = window.electronAPI.get_contratosDeCliente(sesionStore.logedUser.id_usuario)
+    promesa.then((value) => {
+      console.log(value);
+      data.value = value
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 </script>
 

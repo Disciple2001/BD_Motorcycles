@@ -13,7 +13,7 @@ import ClienteAsideMenu from "@/components/ClienteAsideMenu.vue";
       <div class="bg-base-100 w-48 ">
         <ClienteAsideMenu/>
       </div>
-      <div class="w-full p-8">
+      <div class="w-full p-8 homeBackground">
         <slot/>
       </div>
     </aside>
@@ -21,5 +21,12 @@ import ClienteAsideMenu from "@/components/ClienteAsideMenu.vue";
 </template>
 
 <style scoped>
+.homeBackground{
+  background-image: url("src/assets/images/clientHomeImage.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+}
 
 </style>

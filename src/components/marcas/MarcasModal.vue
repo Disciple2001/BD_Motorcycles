@@ -46,14 +46,13 @@ import {onMounted, ref} from "vue";
     <div class="modal-box">
       <h3 class="font-bold text-lg">Insertar una nueva marca</h3>
         <form id="form" @submit.prevent="handleSubmit()">
-          {{ marca }}
           <div class="mb-5 flex flex-col w-full">
             <label form="nom_marca" class="label-text my-2">Nombre de marca</label>
             <input id="nom_marca" class="input input-bordered w-full" type="text" v-model="marca.nom_marca" required>
           </div>
           <div class="flex justify-end gap-2">
             <button type="submit" class="btn">Insertar marca</button>
-            <button type="button" class="btn" @click="()=>isModalOpen = false">Close!</button>
+            <button type="button" class="btn" @click="()=>isModalOpen = false">Cerrar</button>
           </div>
         </form>
     </div>

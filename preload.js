@@ -47,6 +47,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     update_contrato: (id, contrato) => ipcRenderer.invoke('update:Contrato', id, contrato),
     create_contrato: (contrato) => ipcRenderer.invoke('create:Contrato', contrato),
     delete_contrato: (id) => ipcRenderer.invoke('delete:Contrato', id),
+    finalizar_contrato: (id) => ipcRenderer.invoke('finalizar:Contrato', id),
+
 
     get_formasPago: () => ipcRenderer.invoke('get:FormasPago'),
     get_formaPago: (id) => ipcRenderer.invoke('get:Contrato', id),

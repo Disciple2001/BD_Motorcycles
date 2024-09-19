@@ -1,12 +1,19 @@
 <script setup lang="js">
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
 import {useSesionStore} from "@/stores/sesion";
+import {useRouter} from "vue-router";
 
   let formulario, firstInput;
 
-  const formasPago = ref([])
+const emit = defineEmits(['contractCreated'])
+
+const router = useRouter()
+
+
+
+const formasPago = ref([])
   const usuarios = ref([])
   const motos = ref([])
 
@@ -18,17 +25,7 @@ import {useSesionStore} from "@/stores/sesion";
 
 
   onMounted(()=>{
-      formulario = document.getElementById("form")
-      firstInput = document.getElementById("matricula")
-
-      const promesa = window.electronAPI.get_formasPago()
-      promesa.then((value) => formasPago.value = value)
-
-      const promesa2 = window.electronAPI.get_usuarios()
-      promesa2.then((value) => usuarios.value = value)
-
-      const promesa3 = window.electronAPI.get_motosDisponibles()
-      promesa3.then((value) => motos.value = value)
+      fetchData()
   })
 
   const isModalOpen = ref(false)
@@ -37,7 +34,7 @@ import {useSesionStore} from "@/stores/sesion";
     fecha_ini: current_date.format('YYYY-MM-DD'),
     fecha_fin: "",
     dias_prorro: 0,
-    seguro: "false",
+    seguro: false,
     id_formaPago: "",
     id_usuario: sesionStore.logedUser.id_usuario,
     id_moto: "",
@@ -68,6 +65,13 @@ import {useSesionStore} from "@/stores/sesion";
       if (result.isConfirmed) {
 
         const pro = window.electronAPI.create_contrato(contrato._rawValue)
+
+        fetchData()
+        emit('contractCreated')
+        cleanModal()
+        isModalOpen.value = false
+        router.back()
+
 
         pro.then(()=>{
           swalWithBootstrapButtons.fire({
@@ -115,9 +119,8 @@ function cleanModal () {
   contrato.value.fecha_ini = current_date.format('YYYY-MM-DD'),
   contrato.value.fecha_fin = "",
   contrato.value.dias_prorro = 0,
-  contrato.value.seguro = "false",
+  contrato.value.seguro = false,
   contrato.value.id_formaPago = "",
-  contrato.value.id_usuario = "",
   contrato.value.id_moto = "",
   contrato.value.precio = 0
 }
@@ -131,17 +134,35 @@ const calcularPrecio = () => {
   return diasDiferencia * 10
 }
 
+const fetchData = () => {
+  // formulario = document.getElementById("form")
+  // firstInput = document.getElementById("matricula")
+
+  try{
+    const promesa = window.electronAPI.get_formasPago()
+    promesa.then((value) => formasPago.value = value)
+
+    const promesa2 = window.electronAPI.get_usuarios()
+    promesa2.then((value) => usuarios.value = value)
+
+    const promesa3 = window.electronAPI.get_motosDisponibles()
+    promesa3.then((value) => motos.value = value)
+  }catch(e){
+    console.log(e)
+  }
+
+}
+
+
 </script>
 
 <template>
-  <button class="btn modal-button btn-outline btn-ghost" @click="()=> isModalOpen = true">Alquilar moto</button>
+  <button class="btn modal-button btn-primary" @click="()=> isModalOpen = true">Alquilar moto</button>
 
   <div class="modal" :class="{ 'modal-open': isModalOpen }">
     <div class="modal-box">
       <h3 class="font-bold text-lg">Crear un nuevo contrato</h3>
         <form id="form" @submit.prevent="handleSubmit()">
-          {{ contrato }}
-          <button type="button" @click="calcularPrecio">Clisss</button>
           <div class="mb-5 flex flex-col w-full">
             <label for="fecha_ini" class="label-text my-2">Fecha inicial</label>
             <input id="fecha_ini" :disabled="true" class="input input-bordered w-full" :value="current_date.format('YYYY-MM-DD')" type="date" required>
@@ -160,9 +181,9 @@ const calcularPrecio = () => {
           <div class="mb-5 flex flex-col w-full">
             <label for="seguro" class="label-text my-2">Seguro</label>
             <div id="seguro" class="flex gap-2 items-center">
-              <input id="one" value="false" type="radio" name="radio-1" class="radio" checked v-model="contrato.seguro"/>
+              <input id="one" :value="false" type="radio" name="radio-1" class="radio" checked v-model="contrato.seguro"/>
               <label for="one">Descartar seguro</label>
-              <input id="second" value="true" type="radio" name="radio-1" class="radio" v-model="contrato.seguro"/>
+              <input id="second" :value="true" type="radio" name="radio-1" class="radio" v-model="contrato.seguro"/>
               <label for="second">Añadir seguro</label>
             </div>
           </div>

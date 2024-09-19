@@ -59,6 +59,42 @@ const handleDelete = (id) =>{
 }
 
 
+const handleFinalizar = (id) =>{
+  try{
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, finalizalo!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const pro = window.electronAPI.finalizar_contrato(id)
+        pro.then(()=>{
+          swalWithBootstrapButtons.fire({
+            title: "Finalizado!",
+            text: "Your file has been deleted.",
+            icon: "success"
+          });
+        })
+      } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelled",
+          text: "Your imaginary file is safe :)",
+          icon: "error"
+        });
+      }
+    })
+  }catch(err){
+    console.log(err)
+  }
+}
+
 </script>
 
 <template>
@@ -75,7 +111,7 @@ const handleDelete = (id) =>{
           <th class="">Id_Moto</th>
           <th class="">Dias de Prorroga</th>
           <th class="flex justify-end">
-            <ContratosModal/>
+<!--            <ContratosModal/>-->
           </th>
         </tr>
       </thead>
@@ -105,10 +141,11 @@ const handleDelete = (id) =>{
           <td>
             {{ item.dias_prorro }}
           </td>
-          <td class="flex justify-end gap-2">
+          <td class="flex flex-col justify-end gap-2 ">
 <!--            <button class="btn btn-outline btn-info btn-xs modal-button">details</button>-->
 <!--            <ContratoActualizarModal :id="`${item.id_contrato}`"/>-->
             <button class="btn btn-outline btn-error btn-xs" @click="handleDelete(item.id_contrato)">eliminar</button>
+            <button class="btn btn-outline btn-primary btn-xs" @click="handleFinalizar(item.id_contrato)">Finalizar</button>
           </td>
         </tr>
       </tbody>

@@ -80,7 +80,7 @@ const fetchMarcas = () => {
           </td>
           <td class="flex justify-end gap-2">
 <!--            <button class="btn btn-outline btn-info btn-xs modal-button">details</button>-->
-            <MarcasActualizarModal :id="`${item.id_marca}`"/>
+            <MarcasActualizarModal @updateMarca="fetchMarcas()" :id="`${item.id_marca}`"/>
             <button class="btn btn-outline btn-error btn-xs" @click="handleDelete(item.id_marca)">eliminar</button>
           </td>
         </tr>

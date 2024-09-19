@@ -9,12 +9,7 @@ const data = ref([])
 
 
 onMounted(() => {
-  try {
-    const promesa = window.electronAPI.get_usuarios()
-    promesa.then((value) => data.value = value)
-  } catch (err) {
-    console.log(err)
-  }
+  fetchUsuarios()
 })
 
 const handleDelete = (id) =>{
@@ -30,12 +25,15 @@ const handleDelete = (id) =>{
     }).then((result) => {
       if (result.isConfirmed) {
         const pro = window.electronAPI.delete_usuario(id)
+
         pro.then(()=>{
+
           swalWithBootstrapButtons.fire({
             title: "Deleted!",
             text: "Your file has been deleted.",
             icon: "success"
           });
+          fetchUsuarios()
         })
       } else if (
           /* Read more about handling dismissals below */
@@ -53,6 +51,15 @@ const handleDelete = (id) =>{
   }
 }
 
+const fetchUsuarios = () => {
+  try {
+    const promesa = window.electronAPI.get_usuarios()
+    promesa.then((value) => data.value = value)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 
 </script>
 
@@ -62,8 +69,11 @@ const handleDelete = (id) =>{
       <thead class="th bg-blue-950">
         <tr class="">
           <th class="">Nombre</th>
+          <th class="">Edad</th>
+          <th class="">Telefono</th>
+          <th class="">Sexo</th>
           <th class="flex justify-end">
-            <UsuariosModal/>
+            <UsuariosModal @add-usuario="fetchUsuarios()"/>
           </th>
         </tr>
       </thead>
@@ -71,7 +81,15 @@ const handleDelete = (id) =>{
         <tr v-for="item in data">
           <td>
             {{ item.nom_usuario }}
-
+          </td>
+          <td>
+            {{ item.edad }}
+          </td>
+          <td>
+            {{ item.num_tel }}
+          </td>
+          <td>
+            {{ item.sexo }}
           </td>
           <td class="flex justify-end gap-2">
 <!--            <button class="btn btn-outline btn-info btn-xs modal-button">details</button>-->

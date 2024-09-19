@@ -10,9 +10,7 @@ const sesionStore = useSesionStore()
 
 <template>
   <HomeLayout>
-      <h1>Client</h1>
-      {{ sesionStore.isLoged }}
-      {{ sesionStore.logedUser.nom_usuario }}
-      {{ sesionStore.logedUser.id_usuario }}
+      <h1 class="text-xl">Bienvenido usuario {{ sesionStore.logedUser.nom_usuario }}</h1>
+
   </HomeLayout>
 </template>

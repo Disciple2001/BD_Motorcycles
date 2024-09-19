@@ -502,11 +502,12 @@ async function deleteUsuario(event, id){
 }
 
 
-async function createUsuario(event, cliente){
+async function createUsuario(event, usuario){
     try{
+        console.log(usuario)
         const conn = getConnection()
-        const usuarioAA = await conn`INSERT INTO "Usuario" ("nom_usuario", "edad", "sexo", "num_tel", "id_mun") VALUES(${usuario.nom_usuario}, ${usuario.edad},
-        ${usuario.sexo}, ${usuario.num_tel}, ${usuario.id_mun}) 
+        const usuarioAA = await conn`INSERT INTO "Usuario" ("nom_usuario", "edad", "sexo", "num_tel", "id_mun", "id_rol", "password") VALUES(${usuario.nom_usuario}, ${usuario.edad},
+        ${usuario.sexo}, ${usuario.num_tel}, ${usuario.id_mun}, ${usuario.id_rol} , ${usuario.password}) 
         RETURNING "nom_usuario"`
         return usuarioAA
         console.log(usuarioAA)
@@ -576,10 +577,28 @@ async function deleteContrato(event, id){
 }
 
 
+
+async function finalizarContrato(event, id){
+    try{
+        const conn = getConnection()
+        const contrato = await conn`
+        UPDATE "Contrato"
+        SET estado='Completado'
+        WHERE "id_contrato" = ${id} 
+        returning "id_contrato"
+        `
+        return contrato
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
 async function createContrato(event, contrato){
     try{
 
         console.log(contrato)
+        console.log(contrato.seguro)
 
         const conn = getConnection()
         const contratoAA = await conn`
@@ -873,6 +892,7 @@ app.whenReady().then(() => {
     ipcMain.handle('update:Contrato', updateContrato)
     ipcMain.handle('create:Contrato', createContrato)
     ipcMain.handle('delete:Contrato', deleteContrato)
+    ipcMain.handle('finalizar:Contrato', finalizarContrato)
 
     ipcMain.handle('get:FormasPago', getFormasPago)
     ipcMain.handle('get:FormaPago', getFormaPago)

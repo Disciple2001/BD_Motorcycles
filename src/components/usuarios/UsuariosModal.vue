@@ -8,8 +8,13 @@ import {onMounted, ref} from "vue";
   const roles = ref([])
   const sexos = ["M", "F"]
 
+const emit = defineEmits([
+  'addUsuario'
+])
 
-  onMounted(()=>{
+
+
+onMounted(()=>{
       formulario = document.getElementById("form")
       firstInput = document.getElementById("nom_usuario")
 
@@ -31,25 +36,27 @@ import {onMounted, ref} from "vue";
     id_rol: ""
   })
 
-  const handleSubmit = () => {
-    if(modelo.value.id_marca !== ""){
-      const pro = window.electronAPI.create_usuario(usuario._rawValue)
+const handleSubmit = () => {
+    const pro = window.electronAPI.create_usuario(usuario._rawValue)
 
-      pro.then((value) => {
-        cleanModal()
-        firstInput.focus()
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Modelo Creado Exitosamente",
-          showConfirmButton: false,
-          timer: 1500
-        })
-      }).catch((err)=>{
-        console.log(err)
+
+    pro.then((value) => {
+      emit('addUsuario')
+      cleanModal()
+      firstInput.focus()
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Modelo Creado Exitosamente",
+        showConfirmButton: false,
+        timer: 1500
       })
-    }
-  }
+    }).catch((err)=>{
+      console.log(err)
+    })
+
+}
+
 
 function cleanModal () {
   usuario.value.nom_usuario = "",

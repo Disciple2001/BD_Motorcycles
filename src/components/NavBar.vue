@@ -17,7 +17,6 @@ const router = useRouter()
         <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">Menu</div>
         <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
           <li><RouterLink to="/">Home</RouterLink></li>
-          <li><RouterLink to="/about">Users</RouterLink></li>
         </ul>
       </div>
     </div>

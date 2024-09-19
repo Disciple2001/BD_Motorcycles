@@ -8,11 +8,8 @@
       <details>
         <summary>Menu</summary>
         <ul>
-          <li><a>Cars</a></li>
           <li><RouterLink to="/contratos">Contratos</RouterLink></li>
-          <li><RouterLink to="/users">Users</RouterLink></li>
           <li><RouterLink to="/usuarios">Usuarios</RouterLink></li>
-          <li><RouterLink to="/login">Login</RouterLink></li>
           <li><RouterLink to="/marcas">Marcas</RouterLink></li>
           <li><RouterLink to="/modelos">Modelos</RouterLink></li>
           <li><RouterLink to="/motos">Motos</RouterLink></li>

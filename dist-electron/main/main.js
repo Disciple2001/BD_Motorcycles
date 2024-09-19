@@ -396,37 +396,37 @@ async function getUsuarios() {
 async function getUsuario(event, id) {
   try {
     const conn = getConnection();
-    const usuario2 = await conn`
+    const usuario = await conn`
         select
         *
         from "Usuario"
         where "id_usuario" = ${id}
         `;
-    return usuario2;
+    return usuario;
   } catch (err) {
     console.log(err);
   }
 }
-async function confirmUsuario(event, usuario2) {
+async function confirmUsuario(event, usuario) {
   try {
     const conn = getConnection();
     const usuarioAA = await conn`
         select * 
         from "Usuario"
-        where "nom_usuario" = ${usuario2.nom_usuario} AND "password" = ${usuario2.password}
+        where "nom_usuario" = ${usuario.nom_usuario} AND "password" = ${usuario.password}
         `;
     return usuarioAA;
   } catch (err) {
     console.log(err);
   }
 }
-async function updateUsuario(event, id, usuario2) {
+async function updateUsuario(event, id, usuario) {
   try {
     const conn = getConnection();
     const usuarioAA = await conn`
         UPDATE "Usuario"
-        SET "nom_usuario" = ${usuario2.nom_usuario}, "edad" = ${usuario2.edad}, "sexo" = ${usuario2.sexo},
-        "num_tel" = ${usuario2.num_tel}, "id_mun" = ${usuario2.id_mun}
+        SET "nom_usuario" = ${usuario.nom_usuario}, "edad" = ${usuario.edad}, "sexo" = ${usuario.sexo},
+        "num_tel" = ${usuario.num_tel}, "id_mun" = ${usuario.id_mun}
         WHERE "id_usuario" = ${id} 
         returning "nom_usuario"
         `;
@@ -438,21 +438,22 @@ async function updateUsuario(event, id, usuario2) {
 async function deleteUsuario(event, id) {
   try {
     const conn = getConnection();
-    const usuario2 = await conn`
+    const usuario = await conn`
         DELETE from "Usuario"
         WHERE "id_usuario" = ${id} 
         returning "nom_usuario"
         `;
-    return usuario2;
+    return usuario;
   } catch (err) {
     console.log(err);
   }
 }
-async function createUsuario(event, cliente) {
+async function createUsuario(event, usuario) {
   try {
+    console.log(usuario);
     const conn = getConnection();
-    const usuarioAA = await conn`INSERT INTO "Usuario" ("nom_usuario", "edad", "sexo", "num_tel", "id_mun") VALUES(${usuario.nom_usuario}, ${usuario.edad},
-        ${usuario.sexo}, ${usuario.num_tel}, ${usuario.id_mun}) 
+    const usuarioAA = await conn`INSERT INTO "Usuario" ("nom_usuario", "edad", "sexo", "num_tel", "id_mun", "id_rol", "password") VALUES(${usuario.nom_usuario}, ${usuario.edad},
+        ${usuario.sexo}, ${usuario.num_tel}, ${usuario.id_mun}, ${usuario.id_rol} , ${usuario.password}) 
         RETURNING "nom_usuario"`;
     return usuarioAA;
     console.log(usuarioAA);
@@ -515,9 +516,24 @@ async function deleteContrato(event, id) {
     console.log(err);
   }
 }
+async function finalizarContrato(event, id) {
+  try {
+    const conn = getConnection();
+    const contrato = await conn`
+        UPDATE "Contrato"
+        SET estado='Completado'
+        WHERE "id_contrato" = ${id} 
+        returning "id_contrato"
+        `;
+    return contrato;
+  } catch (err) {
+    console.log(err);
+  }
+}
 async function createContrato(event, contrato) {
   try {
     console.log(contrato);
+    console.log(contrato.seguro);
     const conn = getConnection();
     const contratoAA = await conn`
         INSERT INTO "Contrato" ("fecha_ini", "fecha_fin", "dias_prorro", "seguro", 
@@ -769,6 +785,7 @@ app.whenReady().then(() => {
   ipcMain.handle("update:Contrato", updateContrato);
   ipcMain.handle("create:Contrato", createContrato);
   ipcMain.handle("delete:Contrato", deleteContrato);
+  ipcMain.handle("finalizar:Contrato", finalizarContrato);
   ipcMain.handle("get:FormasPago", getFormasPago);
   ipcMain.handle("get:FormaPago", getFormaPago);
   ipcMain.handle("update:FormaPago", updateFormaPago);
